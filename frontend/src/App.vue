@@ -44,7 +44,11 @@
         </h3>
 
         <h3>
-          UDT list (you're admin)
+          Status : {{ getStatus }}
+        </h3>
+
+        <h3>
+          UDT list (only which you're admin)
         </h3>
         <div>
           <div
@@ -116,6 +120,7 @@ export default {
       searchDecimalData: null,
       searchNameData: null,
       searchDuplicatedData: null,
+      status: null,
     };
   },
   components: {},
@@ -135,6 +140,9 @@ export default {
     searchDuplicated() {
       return this.searchDuplicatedData;
     },
+    getStatus() {
+      return this.status;
+    }
   },
   beforeDestroy() {
 
@@ -145,11 +153,13 @@ export default {
       this.$wallet.connectToSynapse(
           window.ckb
       ).then((result) => {
+        _self.status = "Synapse wallet connected";
         _self.currentLockScript = result.lock;
         _self.currentAddress = result.address;
         console.log("connected to Synapse : ", result);
         _self.getCells();
       }).catch((error) => {
+        _self.status = error;
         console.log(error);
       });
     },
@@ -158,6 +168,7 @@ export default {
       this.$http.get("/api/get_cells", {
           params: this.currentLockScript
       }).then((response) => {
+        _self.status = "got cells : " + response.data.length;
         console.log(response.data);
         _self.cells = response.data;
         _self.udts = _self.$cell.filterCellsUDT(
@@ -182,6 +193,7 @@ export default {
           }
         });
       }).then((response) => {
+        _self.status = "got info cells : " + response.data.length;
         console.log(response.data);
         _self.infos = response.data;
 
@@ -190,6 +202,7 @@ export default {
             _self.udts
         );
       }).catch((error) => {
+        _self.status = error;
         console.error(error);
       });
     },
@@ -205,6 +218,7 @@ export default {
           index: udt.out_point.index
         }
       }).then((udtDeps) => {
+        _self.status = "got UDT deps : " + udtDeps.data;
         let tx = _self.$transaction.generateTx(
             _self.currentAddress,
             _self.cells,
@@ -216,12 +230,15 @@ export default {
             tx
         )
       }).then((signedTx) => {
+        _self.status = "signed Tx";
         return _self.$http.post("/api/send_tx", {
           tx: JSON.stringify(_self.$transaction.changeFormat(signedTx.data.tx))
         })
       }).then((response) => {
+        _self.status = "sent Tx : "+response.data;
         console.log(response);
       }).catch((error) => {
+        _self.status = error;
         console.log(error);
       });
     },
@@ -244,6 +261,7 @@ export default {
           hash_type
         }
       }).then((response) => {
+        _self.status = "searching UDT info : "+response.data.length;
         if (response.data.length > 0) {
           let filteredData = _self.$cell.getUDTDataFromInfoCell(response.data[0].data);
           _self.searchSymbolData = filteredData.symbol;
@@ -257,6 +275,7 @@ export default {
           _self.searchDuplicatedData = null;
         }
       }).catch((error) => {
+        _self.status = error;
         console.log(error);
       });
     }
