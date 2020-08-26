@@ -169,7 +169,7 @@ export default {
           params: this.currentLockScript
       }).then((response) => {
         _self.status = "got cells : " + response.data.length;
-        console.log(response.data);
+        console.log("Your cells : ", response.data);
         _self.cells = response.data;
         _self.udts = _self.$cell.filterCellsUDT(
             response.data,
@@ -194,7 +194,7 @@ export default {
         });
       }).then((response) => {
         _self.status = "got info cells : " + response.data.length;
-        console.log(response.data);
+        console.log("Your info cells : ", response.data);
         _self.infos = response.data;
 
         _self.udts = _self.$cell.filterCellsUDTInfo(
@@ -236,14 +236,14 @@ export default {
         })
       }).then((response) => {
         _self.status = "sent Tx : "+response.data;
-        console.log(response);
+        console.log("tx : ", response);
       }).catch((error) => {
         _self.status = error;
         console.log(error);
       });
     },
     updateInfo: function (udt) {
-      console.log(udt);
+      console.log("updating UDT : ", udt);
       this.sendTx(udt);
     },
     searchInfo: function () {

@@ -28,7 +28,7 @@ const transaction = {
             minCKB + BigInt(6100000000)
         );
         unspentCells = unspentCellsRes.unspentCells;
-        console.log(unspentCellsRes);
+        console.log("input cells : ", unspentCellsRes);
 
         let rawTransaction = ckb.generateRawTransaction({
             fromAddress: addr,

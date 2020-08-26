@@ -13,6 +13,7 @@ const cell = {
         // eslint-disable-next-line no-undef
         let currentCKB = BigInt(0);
         let filteredUnspentCells = unspentCells.reduce((acc, unspentCell) => {
+            console.log(unspentCell);
             if (
                 unspentCell.cell_output.type === undefined
                 && unspentCell.data === '0x'
@@ -23,7 +24,7 @@ const cell = {
                 currentCKB += BigInt(unspentCell.cell_output.capacity);
                 acc.push({
                     dataHash: config.emptyDataHash,
-                    type: unspentCell.cell_output.type || null,
+                    type: null,
                     capacity: unspentCell.cell_output.capacity,
                     outPoint: {
                         txHash: unspentCell.out_point.tx_hash,
@@ -44,7 +45,7 @@ const cell = {
                 udtCellInfo.data = unspentCell.data;
                 acc.push({
                     dataHash: config.emptyDataHash,
-                    type: unspentCell.cell_output.type || null,
+                    type: unspentCell.cell_output.type,
                     capacity: unspentCell.cell_output.capacity,
                     outPoint: {
                         txHash: unspentCell.out_point.tx_hash,
