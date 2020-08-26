@@ -25,7 +25,7 @@ const transaction = {
             unspentCells,
             udt,
             // eslint-disable-next-line no-undef
-            minCKB + BigInt(6100000000)
+            minCKB + BigInt(6100001000)
         );
         unspentCells = unspentCellsRes.unspentCells;
         console.log("input cells : ", unspentCellsRes);
@@ -33,8 +33,11 @@ const transaction = {
         let rawTransaction = ckb.generateRawTransaction({
             fromAddress: addr,
             toAddress: addr,
-            // eslint-disable-next-line no-undef
-            capacity: minCKB + BigInt(unspentCellsRes.udtCellInfo.capacity),
+            capacity: unspentCellsRes.currentCKB
+                // eslint-disable-next-line no-undef
+                - BigInt(6100001000)
+                // eslint-disable-next-line no-undef
+                + BigInt(unspentCellsRes.udtCellInfo.capacity),
             // eslint-disable-next-line no-undef
             fee: BigInt(1000),
             safeMode: false,
@@ -79,7 +82,14 @@ const transaction = {
             }
         });
         rawTransaction.outputsData.push(unspentCellsRes.udtCellInfo.data);
-        console.log(rawTransaction);
+        rawTransaction.outputs[1].capacity = utils.bnToHexNoLeadingZero(
+            // eslint-disable-next-line no-undef
+            BigInt(unspentCellsRes.currentCKB)
+            // eslint-disable-next-line no-undef
+            - BigInt(rawTransaction.outputs[0].capacity)
+            // eslint-disable-next-line no-undef
+            - BigInt(1000)
+        );
         // eslint-disable-next-line no-undef
         let fee = BigInt(CKBUtil.serializeRawTransaction(rawTransaction).length / 2);
         // eslint-disable-next-line no-undef
@@ -116,7 +126,7 @@ const transaction = {
         unspentCells = unspentCellsRes.unspentCells;
         console.log("input cells : ", unspentCellsRes);
 
-        const rawTransaction = ckb.generateRawTransaction({
+        let rawTransaction = ckb.generateRawTransaction({
             fromAddress: addr,
             toAddress: addr,
             // eslint-disable-next-line no-undef
