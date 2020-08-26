@@ -1,4 +1,13 @@
 const utils = {
+    bnToHex : function (bn) {
+        let base = 16;
+        // eslint-disable-next-line no-undef
+        let hex = BigInt(bn).toString(base);
+        if (hex.length % 2) {
+            hex = '0' + hex;
+        }
+        return "0x" + hex;
+    },
     bnToHexNoLeadingZero: function(bn) {
         let base = 16;
         // eslint-disable-next-line no-undef

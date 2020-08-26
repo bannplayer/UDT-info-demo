@@ -23,6 +23,15 @@ const config = {
         args: '0xad2b56ebc45f2936c4ac2dddb2320fe94568ade4'
     },
     udtInfoCodeHash: "0xd79411222c52de46b9b6eab05c11cdfdfefb91ffc8b7076f7caf0f12cd0aa12f",
+
+    testUDTCodeHash : "0x8971b3a963e6288868cc0ff81686ae177c7ee315a471298f486ae2074260ff4c",
+    testUDTDeps : {
+        outPoint: {
+            txHash: "0x8dab22e2507dbcc90693d2a6d4beebfcc320f72b3e05ca1473f627b942955c73",
+            index: "0x0"
+        },
+        depType: "code"
+    },
 }
 
 module.exports = config;

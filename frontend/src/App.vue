@@ -26,6 +26,7 @@
           >lay2dev's work</a>
         </h4>
         <button @click.prevent="connectToSynapse()">Connect to synapse wallet</button>
+        <button v-if="currentAddress !== null" @click.prevent="sendMintUDTTx()">Mint testing UDT to your account</button>
       </div>
       <div class="cells">
         <input type="text" placeholder="UDT type script hash" v-model="searchUDTTypeHash"/>
@@ -50,6 +51,7 @@
         <h3>
           UDT list (only which you're admin)
         </h3>
+
         <div>
           <div
             class="cell"
@@ -114,6 +116,7 @@ export default {
       udts: [],
       infos: [],
       currentLockScript: null,
+      currentLockScriptHash: null,
       currentAddress: null,
       searchUDTTypeHash: null,
       searchSymbolData: null,
@@ -155,6 +158,7 @@ export default {
       ).then((result) => {
         _self.status = "Synapse wallet connected";
         _self.currentLockScript = result.lock;
+        _self.currentLockScriptHash = result.lockHash;
         _self.currentAddress = result.address;
         console.log("connected to Synapse : ", result);
         _self.getCells();
@@ -237,6 +241,30 @@ export default {
       }).then((response) => {
         _self.status = "sent Tx : "+response.data;
         console.log("tx : ", response);
+      }).catch((error) => {
+        _self.status = error;
+        console.log(error);
+      });
+    },
+    sendMintUDTTx: function() {
+      let _self = this;
+
+      let tx = _self.$transaction.generateMintUDTTx(
+            _self.currentAddress,
+            _self.currentLockScriptHash,
+            _self.cells
+      );
+      this.$wallet.signSynapse(
+            window.ckb,
+            tx
+      ).then((signedTx) => {
+        _self.status = "signed mint Tx";
+        return _self.$http.post("/api/send_tx", {
+          tx: JSON.stringify(_self.$transaction.changeFormat(signedTx.data.tx))
+        })
+      }).then((response) => {
+        _self.status = "sent mint Tx : "+response.data;
+        console.log("mint tx : ", response);
       }).catch((error) => {
         _self.status = error;
         console.log(error);

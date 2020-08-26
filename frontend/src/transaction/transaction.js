@@ -98,6 +98,57 @@ const transaction = {
         return rawTransaction;
     },
 
+    generateMintUDTTx: function(
+        addr,
+        lockHash,
+        unspentCells
+    ) {
+        const ckb = new config.CKB("http://localhost:8114");
+
+        let unspentCellsRes = cell.filterCellsTx(
+            unspentCells,
+            {
+                typeHash: null
+            },
+            // eslint-disable-next-line no-undef
+            BigInt(20400001000)
+        );
+        unspentCells = unspentCellsRes.unspentCells;
+        console.log("input cells : ", unspentCellsRes);
+
+        const rawTransaction = ckb.generateRawTransaction({
+            fromAddress: addr,
+            toAddress: addr,
+            // eslint-disable-next-line no-undef
+            capacity: BigInt(14300000000),
+            // eslint-disable-next-line no-undef
+            fee: BigInt(1000),
+            safeMode: false,
+            cells: unspentCells,
+            deps: config.secp256k1Dep,
+        });
+
+        rawTransaction.witnesses[0] = {
+            lock: '',
+            inputType: '',
+            outputType: ''
+        };
+
+        rawTransaction.cellDeps.push(config.testUDTDeps);
+
+        rawTransaction.outputs[0].type = {
+            codeHash: config.testUDTCodeHash,
+            hashType: "type",
+            args: lockHash,
+        };
+        rawTransaction.outputsData[0] = utils.changeEndianness(
+            // eslint-disable-next-line no-undef
+            utils.bnToHex(BigInt("10000000000000000000000000000"))
+        ).padEnd(34, '0');
+
+        return rawTransaction;
+    },
+
     changeFormat: function (
         tx
     ) {
