@@ -128,7 +128,16 @@ export default {
   },
   components: {},
   mounted() {
-
+    let _self = this;
+    this.$http.get("/api/", {
+    }).then((response) => {
+      // eslint-disable-next-line no-undef
+      _self.status = "Current tip of lumos indexer : " + BigInt(response.data.block_number);
+      console.log("lumos indexer tip block : ", response.data);
+    }).catch((error) => {
+      _self.status = error;
+      console.error(error);
+    });
   },
   computed: {
     searchSymbol() {
