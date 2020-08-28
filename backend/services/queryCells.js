@@ -1,5 +1,5 @@
-var indexer = require('../models/indexer');
-var transactionManager = require('../models/transactionManager');
+var indexer = require('../data-access/indexer');
+var transactionManager = require('../data-access/transactionManager');
 
 const queryCells = {
     getTipIndexer : async function (
