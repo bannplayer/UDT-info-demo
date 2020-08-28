@@ -1,6 +1,6 @@
 # UDT info demo
 
-Demo for making UDT info cells and getting UDT info data from on-chain using lumos.
+Simple demo for making UDT info cells and getting UDT info data from on-chain using lumos (https://github.com/nervosnetwork/lumos).
 
 ## Backend
 Simple express api server with lumos. 
@@ -13,7 +13,7 @@ Can query with
 - sending signed transaction to lumos transactionManager
 
 ## Frontend
-Simple vue client with synapse extension.
+Simple client with vue, synapse extension (https://github.com/rebase-network/synapse-extension), simplest dapp (https://github.com/lay2dev/simplestdapp).
 
 Can do
 - minting test UDT 
