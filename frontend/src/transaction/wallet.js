@@ -11,7 +11,7 @@ const wallet = {
         const ckb = new config.CKB("http://localhost:8114");
 
         let walletInfo = await ckbInjected.getAddressInfo();
-        if(walletInfo.data.type === 'Secp256k1') {
+        if(walletInfo.data.type !== "Secp256k1") {
             throw Error("Only secp256k1 account available");
         }
 
