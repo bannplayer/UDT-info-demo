@@ -19,3 +19,6 @@ Can do
 - minting test UDT 
 - sending transaction to make UDT info cell
 - querying UDT info cell with UDT type script hash
+
+## UDT info type script
+https://github.com/bannplayer/UDT-info-type-script
